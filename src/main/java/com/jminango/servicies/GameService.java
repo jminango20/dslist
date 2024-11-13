@@ -3,6 +3,7 @@ package com.jminango.servicies;
 import com.jminango.dto.GameDTO;
 import com.jminango.dto.GameMinDTO;
 import com.jminango.entities.Game;
+import com.jminango.projections.GameMinProjection;
 import com.jminango.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,12 @@ public class GameService {
     public GameDTO findById(Long id) {
         Game result = gameRepository.findById(id).get();
         return new GameDTO(result);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GameMinDTO> findByGameList(Long listId) {
+        List<GameMinProjection> result = gameRepository.searchByList(listId);
+        return result.stream().map(x -> new GameMinDTO(x)).toList();
     }
 
 }
